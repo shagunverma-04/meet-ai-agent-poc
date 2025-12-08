@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+requests
+python-multipart
+pydantic
+tqdm
+openai
+# Optional (local transcription/diarization)
+# whisper @ git+https://github.com/openai/whisper.git
+# whisperx # for alignment + diarization (requires additional deps)

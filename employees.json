@@ -1,0 +1,23 @@
+[
+  {
+    "email": "sanya@company",
+    "name": "Sanya",
+    "roles": ["Product Designer","Designer"],
+    "skills": ["Figma","UX"],
+    "capacity": 0.6
+  },
+  {
+    "email": "bob@company",
+    "name": "Bob",
+    "roles": ["Backend Engineer"],
+    "skills": ["Python","Postgres"],
+    "capacity": 0.7
+  },
+  {
+    "email": "alice@company",
+    "name": "Alice",
+    "roles": ["Product Manager"],
+    "skills": ["Roadmap","Prioritization"],
+    "capacity": 0.5
+  }
+]
