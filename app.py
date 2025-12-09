@@ -1,9 +1,19 @@
-from fastapi import FastAPI, File, UploadFile, BackgroundTasks
+from fastapi import FastAPI, File, UploadFile, BackgroundTasks, HTTPException, Form
+from fastapi.middleware.cors import CORSMiddleware
 import shutil, os, subprocess, json
 from pathlib import Path
 
 app = FastAPI()
 BASE_DIR = Path(__file__).parent
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, specify your frontend domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/ingest/")
 async def ingest(file: UploadFile = File(...)):
@@ -14,7 +24,7 @@ async def ingest(file: UploadFile = File(...)):
     return {"status":"uploaded","filename":file.filename}
 
 @app.post("/process/")
-async def process(filename: str, background: BackgroundTasks):
+async def process(filename: str = Form(...), background: BackgroundTasks = BackgroundTasks()):
     # Spawn background task to run the pipeline synchronously in PoC
     filepath = BASE_DIR / filename
     if not filepath.exists():
@@ -31,3 +41,23 @@ async def process(filename: str, background: BackgroundTasks):
 @app.get("/health")
 def health():
     return {"status":"ok"}
+
+@app.get("/transcript/")
+def get_transcript():
+    """Retrieve the generated transcript."""
+    transcript_path = BASE_DIR / "transcript.json"
+    if not transcript_path.exists():
+        raise HTTPException(status_code=404, detail="Transcript not found. Please process a file first.")
+    with open(transcript_path, "r") as f:
+        transcript = json.load(f)
+    return {"transcript": transcript}
+
+@app.get("/tasks/")
+def get_tasks():
+    """Retrieve the extracted tasks."""
+    tasks_path = BASE_DIR / "tasks.json"
+    if not tasks_path.exists():
+        raise HTTPException(status_code=404, detail="Tasks not found. Please process a file first.")
+    with open(tasks_path, "r") as f:
+        tasks = json.load(f)
+    return {"tasks": tasks}

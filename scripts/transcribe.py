@@ -4,7 +4,7 @@ import argparse, json, os, sys
 from tqdm import tqdm
 
 def whisper_transcribe(audio_path, model_name="small"):
-    try:
+    try:+
         import whisper
     except Exception as e:
         print("Whisper not installed. Install with: pip install -U openai-whisper")
